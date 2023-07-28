@@ -74,4 +74,25 @@ print("")
 df_limpo_2['PAY_1'] = df_limpo_2['PAY_1'].astype("int64")  # astype converter o tipo de dados da coluna
 print("Infos PAY_1")
 print(df_limpo_2['PAY_1'].info())
+print("")
 
+# histogramas
+mpl.rcParams["figure.dpi"] = 400  # alta resolução de imagem
+df_limpo_2[['LIMIT_BAL', 'AGE']].hist()  # gerando um histograma do limite de credito e da idade
+print(df_limpo_2[['LIMIT_BAL', 'AGE']].describe())  # relatorio tabular
+
+# limpando coluna education
+print("")
+print("De acordo com o dicionario de dados 0, 5 e 6 não correspondem a nenhum grau de educação\n"
+      "vamos mover eles para o grau \"outros\" [4]")
+print(df_limpo_2['EDUCATION'].value_counts())
+df_limpo_2['EDUCATION'].replace(to_replace=[0, 5, 6], value=4, inplace=True)  # inplace -> não cria um dataFrame novo, apenas altera o existente
+print(df_limpo_2['EDUCATION'].value_counts())  # df limpo
+
+# limpando coluna marriage
+print("")
+print("De acordo com o dicionario de dados 0 não correspondem a nenhum valor de estado civil\n"
+      "vamos mover eles para o estado de \"outros\" [3]")
+print(df_limpo_2['MARRIAGE'].value_counts())
+df_limpo_2['MARRIAGE'].replace(to_replace=0, value=3, inplace=True)
+print(df_limpo_2['MARRIAGE'].value_counts())  # df limpo
