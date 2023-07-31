@@ -4,12 +4,10 @@ import matplotlib as mpl
 
 """ Obtendo os dados """
 # https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients -> dicionario dos dados
-
-
 df = pd.read_excel("default_of_credit_card_clients__courseware_version_1_21_19.xls")
 
 
-""" Explorando os dados """
+""" Explorando e Limpando os dados """
 
 
 print("Quantidade de linhas e colunas: ", df.shape)
@@ -96,3 +94,27 @@ print("De acordo com o dicionario de dados 0 não correspondem a nenhum valor de
 print(df_limpo_2['MARRIAGE'].value_counts())
 df_limpo_2['MARRIAGE'].replace(to_replace=0, value=3, inplace=True)
 print(df_limpo_2['MARRIAGE'].value_counts())  # df limpo
+print("")
+
+# inverteremos as classificações para aplicar um one-hot encoding melhor para o modelo que iremos criar
+print("Criando uma coluna com string ao invés de números para classificar o grau estudo:")
+df_limpo_2['EDUCATION_CAT'] = 'none'
+
+cat_mapping = {  # relação
+      1: "graduate school",
+      2: "university",
+      3: "high school",
+      4: "others"
+}
+df_limpo_2['EDUCATION_CAT'] = df_limpo_2['EDUCATION'].map(cat_mapping)  # .map -> mapeia os valores antigos e atribui aos novos os valores de acordo com o dicionario
+print(df_limpo_2[['EDUCATION_CAT', 'EDUCATION']].head(10))
+
+print("\nCodificao one-hot encoding:")
+education_ohe = pd.get_dummies(df_limpo_2['EDUCATION_CAT'])  # get_dummies -> recebe uma coluna de DF e retorna um novo DF com um num igual de colunas e níveis de variável categórica. Variáveis dummy.
+print(education_ohe.head(10))
+
+print("\nConcatenando o DF de codificação one-hot com o original")
+df_ohe = pd.concat(objs=[df_limpo_2, education_ohe], axis=1)  # axis=1 -> para que sejam concatenados horizontalmente, eixo da coluna.
+print(df_ohe[['EDUCATION_CAT', 'graduate school', 'high school', 'university', 'others']].head(10))
+
+df_ohe.to_csv('dados_explorados_e_limpos.csv')  # salvando o DF limpo e codificado em um arquivo CSV
