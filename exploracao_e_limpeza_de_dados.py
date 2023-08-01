@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import numpy as np
 
 """ Obtendo os dados """
 # https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients -> dicionario dos dados
@@ -118,3 +119,24 @@ df_ohe = pd.concat(objs=[df_limpo_2, education_ohe], axis=1)  # axis=1 -> para q
 print(df_ohe[['EDUCATION_CAT', 'graduate school', 'high school', 'university', 'others']].head(10))
 
 df_ohe.to_csv('dados_explorados_e_limpos.csv')  # salvando o DF limpo e codificado em um arquivo CSV
+print("")
+
+# verificando o historico financeiro
+df = pd.read_csv('dados_explorados_e_limpos.csv')
+print("Novo DF:", df.shape)
+pay_feats = ['PAY_1', 'PAY_2', 'PAY_3', 'PAY_4', 'PAY_5', 'PAY_6']
+
+print("Estatisticas:")
+print(df[pay_feats].describe())
+
+print("\nagrupando e ordenando os valores de 'PAY_1\n", df[pay_feats[0]].value_counts().sort_index())
+df[pay_feats[0]].hist()
+
+# bins do histograma
+pay_1_bins = np.array(range(-2, 10)) - 0.5
+print("\n", pay_1_bins)
+
+df[pay_feats].hist(bins=pay_1_bins)
+plt.xlabel("PAY_1")
+plt.ylabel("Números de contas")
+# Após vermos os histogramas, vemos que falta dados do PAY_2 até o PAY_6 e iremos tentar prever eles.
