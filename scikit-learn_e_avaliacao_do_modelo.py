@@ -14,8 +14,9 @@ from sklearn.linear_model import LogisticRegression  # regressão lógica, model
 # https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
 
 
-mpl.rcParams['figure.dpi'] = 150
 
+""" CONFIGURANDO E CARREGANDO DADOS """
+mpl.rcParams['figure.dpi'] = 150
 df = pd.read_csv('dados_explorados_e_limpos.csv')
 
 # Contas que ficarão inadimplentes pertencem à classe positiva (=1) enquanto as que não ficarão pertencem à classe negativa
@@ -33,7 +34,8 @@ my_lr = LogisticRegression(penalty='l2', dual=False, tol=0.0001,
 # opções padrão, para ter um bom modelo, temos que especificar algumas opções
 
 
-""" 1º modelo para testarmos os codigos """
+
+""" 1º modelo para testarmos os codigos - Introdução ao Scikit-Learn"""
 my_lr.C = 0.1
 my_lr.solver = 'liblinear'
 
@@ -50,4 +52,22 @@ new_x = df['EDUCATION'][10:20].values.reshape(-1, 1)  # dados para teste
 print("Valores previstos: ", my_lr.predict(new_x))
 print("Valores reais: ", df['default payment next month'][10:20].values)
 
+
+""" Gerar dados sinteticos """
+
+np.random.seed(seed=1)  # seed -> faz uma pseudorandomizacao
+x = np.random.uniform(low=0, high=10, size=(1000,))
+x[0:10]
+
+""" Dados para uma regressão linear """
+
+# criando dados lineares aleatorios com ruidos gaussianos
+# y = ax + b + N (µ, σ)
+
+slope = 0.25
+intercept = -1.25
+
+y = slope * x + np.random.normal(loc=0.0, scale=1.0, size=(1000,)) + intercept # loc -> media do ruido | scale -> desvio padrao
+
+plt.scatter(x, y, s=1)  # s - tamanho dos pontos
 
