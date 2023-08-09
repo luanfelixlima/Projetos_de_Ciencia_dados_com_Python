@@ -11,6 +11,7 @@ import pandas as pd  # preparação dos dados
 import matplotlib.pyplot as plt  # pacote de plotagem
 import matplotlib as mpl  # melhorar a plotagem
 from sklearn.linear_model import LogisticRegression, LinearRegression  # regressão lógica, modelo de classificação
+from sklearn.model_selection import train_test_split # separar dados de treino e de teste
 # https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
 
 
@@ -55,7 +56,7 @@ print("Valores reais: ", df['default payment next month'][10:20].values)
 
 
 """ Gerar dados sinteticos """
-np.random.seed(seed=1)  # seed -> faz uma pseudorandomizacao
+np.random.seed(seed=1)  # seed -> faz uma Pseudoaleatoriedade
 x = np.random.uniform(low=0, high=10, size=(1000,))
 x[0:10]
 
@@ -87,5 +88,20 @@ y_pred = lin_reg.predict(x.reshape(-1, 1))
 # plotando a linha a de melhor a ajuste para os dados
 plt.scatter(x, y, s=1)
 plt.plot(x, y_pred, 'r')  # 'r' da a linha a cor vermelha
+
+
+
+""" Dividindo os dados: treino e teste """
+x_treino, x_teste, y_treino, y_teste = train_test_split(
+    df['EDUCATION'].values.reshape(-1, 1), 
+    df['default payment next month'].values,
+    test_size=0.2, random_state=24
+    )  # test_size = 0.2 -> conjunto de testes equivalente a 20% dos dados
+       # random_state=24 -> Pseudoaleatoriedade dos números
+       # o primeiro argumento são as variáveis independentes
+       # stratify - argumento que garante uma divisão igualitaria de frações da classe entre o treino e o teste
+np.mean(y_treino)  # 0.22
+np.mean(y_teste)  # 0.21
+# os dados estão balanceados entre treino e teste
 
 
